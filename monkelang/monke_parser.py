@@ -5,6 +5,11 @@ from monke_ast import *
 
 
 class MonkeParser:
+    """
+    This is the monkelang default parser. This class takes a string input
+    and lexes them into tokens using the Lexer class. The parser then
+    iterates through the tokens to generate an AST (Abstract Syntax Tree).
+    """
     def __init__(self, string_input):
         self.string_input = string_input
 
@@ -34,6 +39,116 @@ class MonkeParser:
                                 '"', "").replace("'", ""))
 
                             arguments.append(string)
+
+                        elif current_token.type == "PLUS":
+                            lhs = self.lexer.tokens[self.lexer.token_pos - 1]
+
+                            arguments.pop()
+
+                            rhs = self.lexer.next()
+
+                            if lhs.type == "INTEGER":
+                                if rhs.type == "INTEGER":
+                                    binop = BinOp(
+                                        Expr(int(lhs.text)), Expr(int(rhs.text)), "+")
+
+                                    arguments.append(binop)
+                                elif rhs.type in ("DOUBLEQUOTEDSTRING", "SINGLEQUOTEDSTRING"):
+                                    sys.stderr.write(
+                                        f"InvalidTypeError: Cannot add INTEGER {lhs.text} to STRING {rhs.text}")
+                                    sys.exit(1)
+                            elif lhs.type in ("DOUBLEQUOTEDSTRING", "SINGLEQUOTEDSTRING"):
+                                if rhs.type in ("DOUBLEQUOTEDSTRING", "SINGLEQUOTEDSTRING"):
+                                    binop = BinOp(Expr(str(lhs.text.replace('"', "").replace("'", ""))), Expr(
+                                        str(rhs.text).replace('"', "").replace("'", "")), "+")
+
+                                    arguments.append(binop)
+                                elif rhs.type == "INTEGER":
+                                    sys.stderr.write(
+                                        f"InvalidTypeError: Cannot add STRING {lhs.text} to INTEGER {rhs.text}")
+                                    sys.exit(1)
+
+                        elif current_token.type == "MINUS":
+                            lhs = self.lexer.tokens[self.lexer.token_pos - 1]
+
+                            arguments.pop()
+
+                            rhs = self.lexer.next()
+
+                            if lhs.type == "INTEGER":
+                                if rhs.type == "INTEGER":
+                                    binop = BinOp(
+                                        Expr(int(lhs.text)), Expr(
+                                            int(rhs.text)), "-"
+                                    )
+
+                                    arguments.append(binop)
+                                elif rhs.type in ("DOUBLEQUOTEDSTRING", "SINGLEQUOTEDSTRING"):
+                                    sys.stderr.write(
+                                        f"Cannot subbtract STRING {rhs.text} from INTEGER {lhs.text}")
+                                    sys.exit(1)
+                            elif lhs.type == "STRING":
+                                sys.stderr.write(
+                                    f"Cannot subtract using STRING {lhs.text}")
+                                sys.exit(1)
+
+                        elif current_token.type == "STAR":
+                            lhs = self.lexer.tokens[self.lexer.token_pos - 1]
+
+                            arguments.pop()
+
+                            rhs = self.lexer.next()
+
+                            if lhs.type == "INTEGER":
+                                if rhs.type == "INTEGER":
+                                    binop = BinOp(
+                                        Expr(int(lhs.text)), Expr(
+                                            int(rhs.text)), "*"
+                                    )
+
+                                    arguments.append(binop)
+                                elif rhs.type in ("DOUBLEQUOTEDSTRING", "SINGLEQUOTEDSTRING"):
+                                    binop = BinOp(
+                                        Expr(int(lhs.text)), Expr(
+                                            str(rhs.text).replace('"', "").replace("'", "")), "*"
+                                    )
+
+                                    arguments.append(binop)
+                            elif lhs.type in ("DOUBLEQUOTEDSTRING", "SINGLEQUOTEDSTRING"):
+                                if rhs.type == "INTEGER":
+                                    binop = BinOp(
+                                        Expr(str(lhs.text.replace('"', "").replace("'", ""))), Expr(
+                                            int(rhs.text)), "*"
+                                    )
+
+                                    arguments.append(binop)
+                                elif rhs.type in ("DOUBLEQUOTEDSTRING", "SINGLEQUOTEDSTRING"):
+                                    sys.stderr.write(
+                                        f"Cannot multuply STRING {lhs.text} by STRING {rhs.text}")
+                                    sys.exit(1)
+                        elif current_token.type == "SLASH":
+                            lhs = self.lexer.tokens[self.lexer.token_pos - 1]
+
+                            arguments.pop()
+
+                            rhs = self.lexer.next()
+
+                            if lhs.type == "INTEGER":
+                                if rhs.type == "INTEGER":
+                                    binop = BinOp(
+                                        Expr(int(lhs.text)), Expr(
+                                            int(rhs.text)), "/"
+                                    )
+
+                                    arguments.append(binop)
+                                elif rhs.type in ("DOUBLEQUOTEDSTRING", "SINGLEQUOTEDSTRING"):
+                                    sys.stderr.write(
+                                        f"Cannot divide STRING {rhs.text} by INTEGER {lhs.text}")
+                                    sys.exit(1)
+                            elif lhs.type == "STRING":
+                                sys.stderr.write(
+                                    f"Cannot divide using STRING {lhs.text}")
+                                sys.exit(1)
                 else:
                     for token in self.lexer.tokens:
                         print(token.type)

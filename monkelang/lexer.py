@@ -13,10 +13,20 @@ TOKEN_EXPRS = [
     (r"chatter", "CHATTER"),
     (r"\"(?s:[^\"\\\\]|\\\\.)*\"", "DOUBLEQUOTEDSTRING"),
     (r"'(?s:[^'\\\\]|\\\\.)*'", "SINGLEQUOTEDSTRING"),
+    (r"\+", "PLUS"),
+    (r"\-", "MINUS"),
+    (r"\*", "STAR"),
+    (r"\/", "SLASH")
 ]
 
 
 class Lexer:
+    """
+    This class is the lexer for MonkeLang. It takes a string input as an argument
+    and uses regex to turn it into tokens. The tokens are represented as a list
+    and the next and peek functions are used in the parser.
+    """
+
     def __init__(self, string_input, token_exprs=TOKEN_EXPRS):
         self.source = string_input
         self.current_token = ""
