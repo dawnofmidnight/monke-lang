@@ -1,7 +1,6 @@
 import compiler
 import monke_parser
 import vm
-import traceback
 def repl():
     machine = vm.VM([])
     monke_compiler = compiler.Compiler([])
