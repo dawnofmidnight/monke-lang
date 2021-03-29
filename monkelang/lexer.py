@@ -11,6 +11,8 @@ TOKEN_EXPRS = [
     (r"\)", "RBRACE"),
     (r"[ \n\t]+", None),
     (r"chatter", "CHATTER"),
+    (r"\"(?s:[^\"\\\\]|\\\\.)*\"", "DOUBLEQUOTEDSTRING"),
+    (r"'(?s:[^'\\\\]|\\\\.)*'", "SINGLEQUOTEDSTRING"),
 ]
 
 
@@ -48,12 +50,12 @@ class Lexer:
 
     def next(self):
         self.token_pos += 1
-        
+
         if self.token_pos >= len(self.tokens):
             self.current_token = Token("EOF", "EOF")
         else:
             self.current_token = self.tokens[self.token_pos]
-        
+
         return self.current_token
 
     def peek(self):
