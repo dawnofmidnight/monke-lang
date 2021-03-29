@@ -11,6 +11,8 @@ TOKEN_EXPRS = [
     (r"\)", "RBRACE"),
     (r"[ \n\t]+", None),
     (r"chatter", "CHATTER"),
+    (r"\"(?s:[^\"\\\\]|\\\\.)*\"", "DOUBLEQUOTEDSTRING"),
+    (r"'(?s:[^'\\\\]|\\\\.)*'", "SINGLEQUOTEDSTRING"),
 ]
 
 
@@ -23,7 +25,7 @@ class Lexer:
         self.tokens = []
         self.token_exprs = token_exprs
 
-    def lex(self):
+    def lex(self, exit = False, write = True):
         while self.current_pos < len(self.source):
             match = None
             for token_expr in self.token_exprs:
@@ -40,9 +42,12 @@ class Lexer:
                     break
 
             if not match:
-                sys.stderr.write(
-                    f"Invalid Syntax: {self.source[self.current_pos]}\n")
-                sys.exit(1)
+                error = f"Invalid Syntax: {self.source[self.current_pos]}\n"
+                if write:
+                    sys.stderr.write(error)
+                if exit:
+                    sys.exit(1)
+                break
             else:
                 self.current_pos = match.end(0)
 
