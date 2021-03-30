@@ -14,7 +14,7 @@ def repl():
     print("MonkeLang REPL (BETA)")
 
     while True:
-        command = input("> ")
+        command = input("monke> ")
 
         ast = monke_parser.MonkeParser(command).parse()
                 
