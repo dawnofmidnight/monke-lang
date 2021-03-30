@@ -10,6 +10,7 @@ class MonkeParser:
     and lexes them into tokens using the Lexer class. The parser then
     iterates through the tokens to generate an AST (Abstract Syntax Tree).
     """
+
     def __init__(self, string_input):
         self.string_input = string_input
 
@@ -160,6 +161,37 @@ class MonkeParser:
                 chatter = FunctionCall("chatter", arguments)
 
                 ast.append(chatter)
+
+            elif self.lexer.current_token.type == "IDENT":
+                name = self.lexer.current_token.text
+
+                next_token = self.lexer.peek()
+
+                if next_token.type != "ASSIGNMENT":
+                    variable = VariableExpr(name)
+
+                    ast.append(variable)
+
+                    continue
+
+                equals = self.lexer.next()
+
+                value = self.lexer.next()
+
+                if value.type == "INTEGER":
+                    value = Expr(int(value.text))
+                elif value.type in ("DOUBLEQUOTEDSTRING", "SINGLEQUOTEDSTRING"):
+                    value = Expr(str(value.text).replace(
+                        '"', "").replace("'", ""))
+                else:
+                    sys.stderr.write(
+                        f"Invalid value given; Expected STRING or INTEGER, found {value.type}: {value.text}"
+                    )
+                    sys.exit(1)
+
+                assignment_expr = AssignmentExpr(name, value)
+
+                ast.append(assignment_expr)
 
             elif self.lexer.current_token.type == "EOF":
                 break
