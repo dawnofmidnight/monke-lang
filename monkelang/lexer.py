@@ -16,7 +16,9 @@ TOKEN_EXPRS = [
     (r"\+", "PLUS"),
     (r"\-", "MINUS"),
     (r"\*", "STAR"),
-    (r"\/", "SLASH")
+    (r"\/", "SLASH"),
+    (r"[_a-zA-Z][_a-zA-Z0-9]*", "IDENT"),
+    (r"=", "ASSIGNMENT")
 ]
 
 

@@ -33,3 +33,20 @@ class BinOp:
         self.lhs = lhs
         self.rhs = rhs
         self.op = op
+
+
+class AssignmentExpr:
+    """
+    This class is used to represent all variable assignment expressions.
+    It takes a string argument for the name of a variable an an expression
+    argument as the value of hte variable.
+    """
+
+    def __init__(self, name, value):
+        self.name = name
+        self.value = value
+
+
+class VariableExpr:
+    def __init__(self, name):
+        self.name = name
