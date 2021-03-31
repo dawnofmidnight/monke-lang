@@ -77,7 +77,7 @@ class VM:
     def GET_LOCAL(self, argument):
         value = self.stack[argument]
 
-        self.stack.push(value)
+        self.stack.append(value)
 
         self.pc += 1
 

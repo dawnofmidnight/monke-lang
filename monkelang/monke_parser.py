@@ -150,6 +150,20 @@ class MonkeParser:
                                 sys.stderr.write(
                                     f"Cannot divide using STRING {lhs.text}")
                                 sys.exit(1)
+                        elif current_token.type == "IDENT":
+                            name = self.lexer.current_token.text
+
+                            next_token = self.lexer.peek()
+
+                            if next_token.type == "ASSIGNMENT":
+                                sys.stderr.write(
+                                    "Cannot assign variables inside CHATTER")
+                                sys.exit(1)
+
+                            else:
+                                variable = VariableExpr(name)
+
+                                arguments.append(variable)
                 else:
                     for token in self.lexer.tokens:
                         print(token.type)

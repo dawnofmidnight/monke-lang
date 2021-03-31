@@ -19,8 +19,10 @@ def repl():
         ast = monke_parser.MonkeParser(command).parse()
                 
         monke_compiler.ast = ast
+        
 
         code, constant_table = monke_compiler.compile()
+        
 
         machine.constant_table = constant_table
         machine.code = code

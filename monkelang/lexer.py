@@ -45,7 +45,7 @@ class Lexer:
                 regex = re.compile(pattern)
 
                 match = regex.match(self.source, self.current_pos)
-
+            
                 if match:
                     text = match.group(0)
                     if tag:
