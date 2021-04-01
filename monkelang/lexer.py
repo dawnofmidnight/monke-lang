@@ -11,6 +11,7 @@ TOKEN_EXPRS = [
     (r"\)", "RBRACE"),
     (r"[ \n\t]+", None),
     (r"chatter", "CHATTER"),
+    (r"listen", "LISTEN"),
     (r"\"(?s:[^\"\\\\]|\\\\.)*\"", "DOUBLEQUOTEDSTRING"),
     (r"'(?s:[^'\\\\]|\\\\.)*'", "SINGLEQUOTEDSTRING"),
     (r"\+", "PLUS"),

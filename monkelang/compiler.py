@@ -67,6 +67,45 @@ class Compiler:
                             self.code.append(("GET_LOCAL", depth))
 
                     self.code.append(("PRINT_VALUE", 0))
+                    
+                elif ast.name == "listen":
+                    for argument in ast.arguments:
+                        if isinstance(argument, Expr):
+                            self.constant_table.append(argument.value)
+                            index = self.constant_table.index(argument.value)
+
+                            self.code.append(("LOAD_VALUE", index))
+
+                        elif isinstance(argument, BinOp):
+                            self.constant_table.append(argument.rhs.value)
+
+                            index = self.constant_table.index(argument.rhs.value)
+                            self.code.append(("LOAD_VALUE", index))
+
+                            self.constant_table.append(argument.lhs.value)
+                            index = self.constant_table.index(argument.lhs.value)
+                            self.code.append(("LOAD_VALUE", index))
+
+                            if argument.op == "+":
+                                self.code.append(("ADD_TWO_VALUES", 0))
+                            elif argument.op == "-":
+                                self.code.append(("SUB_TWO_VALUES", 0))
+                            if argument.op == "*":
+                                self.code.append(("MUL_TWO_VALUES", 0))
+                            elif argument.op == "/":
+                                self.code.append(("DIV_TWO_VALUES", 0))
+
+                        elif isinstance(argument, VariableExpr):
+                            try:
+                                depth = self.locals[argument.name]
+                            except KeyError:
+                                sys.stderr.write(
+                                    f"InvalidIdentifier: No variable/identifier called {argument.name}")
+                                sys.exit(1)
+
+                            self.code.append(("GET_LOCAL", depth))
+
+                    self.code.append(("INPUT_VALUE", 0))
 
             elif isinstance(ast, Expr):
                 self.constant_table.append(ast.value)

@@ -34,6 +34,14 @@ class VM:
         print(value)
 
         self.pc += 1
+        
+    def INPUT_VALUE(self):
+        #print('INPUT_VALUE called')
+        #print(self.stack)
+        prompt = self.stack.pop()
+        value = input(prompt)
+        self.stack.append(value)
+        self.pc += 1
 
     def ADD_TWO_VALUES(self):
         lhs = self.stack.pop()
